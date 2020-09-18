@@ -180,24 +180,24 @@
   </div>
 </template>
 <script>
-  let fireballSize = 22;
-  function getFireballSpeed(isLeft) {
-    return isLeft ? 2 : 5;
+  var fireballSize = 22;
+  var getFireballSpeed = function (isLeft) {
+    return isLeft ? 20 : 5;
   }
 
-  let wizardWidth = 70;
+  var wizardWidth = 70;
 
-  function getWizardHeight () {
-    getWizardHeight = wizardWidth * 1.337;
+  var getWizardHeight = function() {
+    return wizardWidth * 1.337;
   }
 
-  let wizardSpeed = 3;
+  var wizardSpeed = 3;
 
-  function getWizardX(fieldWidth) {
+  var getWizardX = function (fieldWidth) {
     return (fieldWidth - wizardWidth) / 2;
   }
 
-  function getWizardY(fieldHeight) {
+  var getWizardY = function (fieldHeight) {
     return fieldHeight / 3;
   }
 </script>
