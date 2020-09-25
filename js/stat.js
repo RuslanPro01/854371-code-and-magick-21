@@ -1,45 +1,23 @@
 "use strict";
-var FIREBALL_LEFT_SPEED = 2;
-var FIREBALL_SPEED = 5;
-var PROPORTION_CALCULATION_HEIGHT = 1.337;
-var PROPORTION_CALCULATION_FIELD_HEIGHT = 3;
-var PROPORTION_CALCULATION_FIELD_WIDTH = 3
-var fireballSize = 22;
-var wizardWidth = 70;
-var wizardSpeed = 3;
 
-var getFireballSpeed = function (isLeft) {
-  return isLeft ? FIREBALL_LEFT_SPEED : FIREBALL_SPEED;
-}
+var Cloud = {
+  WIDTH: 420,
+  HEIGHT: 270,
+  X: 100,
+  Y: 10
+};
+var Bar = {
+  HEIGHT: 150,
+  WIDTH: 50,
+  GAP: 50
+};
+var CONTENT_GAP = 10;
+var TEXT_SIZE = 16;
 
-var getWizardHeight = function () {
-  return wizardWidth * PROPORTION_CALCULATION_HEIGHT;
-}
-
-var getWizardX = function (fieldWidth) {
-  return (fieldWidth - wizardWidth) / PROPORTION_CALCULATION_FIELD_WIDTH;
-}
-
-var getWizardY = function (fieldHeight) {
-  return fieldHeight / PROPORTION_CALCULATION_FIELD_HEIGHT;
-}
-
-// ДЗ Canvas
-var CLOUD_WIDTH = 420;
-var CLOUD_HEIGHT = 270;
-var CLOUD_X = 100;
-var CLOUD_Y = 10;
-var GAP = 10;
-var FONT_GAP = 16;
-var TEXT_WIDTH = 50;
-var BAR_HEIGHT = 150;
-var BAR_WIDTH = 50;
-var rgbaNumberOne = (Math.random().toString(8)).substring(2, 5);
-var rgbaNumberTwo = (Math.random().toString(8)).substring(2, 5);
 
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
-  ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
+  ctx.fillRect(x, y, Cloud.WIDTH, Cloud.HEIGHT);
 };
 
 var renderText = function (ctx, color, text, x, y) {
@@ -56,66 +34,84 @@ var getMaxElement = function (arr) {
       maxElement = arr[i];
     }
   }
-
   return maxElement;
 };
 
 window.renderStatistics = function (ctx, players, times) {
   var maxTime = getMaxElement(times);
+  var randomInteger = function (min, max) {
+    // получить случайное число от (min-0.5) до (max+0.5)
+    var rand = min - 0.5 + Math.random() * (max - min + 1);
+    return Math.round(rand);
+  };
 
   renderCloud(
     ctx,
-    CLOUD_X + GAP,
-    CLOUD_Y + GAP,
+    Cloud.X + CONTENT_GAP,
+    Cloud.Y + CONTENT_GAP,
     'rgba(0, 0, 0, 0.7)'
   );
+
   renderCloud(
     ctx,
-    CLOUD_X,
-    CLOUD_Y,
+    Cloud.X,
+    Cloud.Y,
     '#fff'
   );
+
   renderText(
     ctx,
     '#000',
     'Ура вы победили!',
-    CLOUD_X + GAP,
-    CLOUD_Y + 35
+    Cloud.X + CONTENT_GAP,
+    Cloud.Y + 35
   );
+
   renderText(
     ctx,
     '#000',
     'Список результатов:',
-    CLOUD_X + GAP,
-    CLOUD_Y + 35 + FONT_GAP
-  )
+    Cloud.X + CONTENT_GAP,
+    Cloud.Y + 35 + TEXT_SIZE
+  );
+
   for (var i = 0; i < players.length; i++) {
+
+    var barHeight = (Bar.HEIGHT * times[i] / maxTime) * -1;
+    var positionTotalTimeX = Cloud.X + 35 + (50 + Bar.GAP) * i;
+    var positionTotalTimeY = Cloud.HEIGHT - CONTENT_GAP - TEXT_SIZE + barHeight - TEXT_SIZE;
+    var positionPlayersRenderTextX = Cloud.X + 35 + (50 + Bar.GAP) * i;
+    var positionPlayersRenderTextY = Cloud.HEIGHT - CONTENT_GAP;
+    var positionRenderBarX = Cloud.X + 35 + (50 + Bar.GAP) * i;
+    var positionRenderBarY = Cloud.HEIGHT - CONTENT_GAP - TEXT_SIZE;
+
     renderText(
       ctx,
       '#000',
       players[i],
-      CLOUD_X + 35 + (50 + TEXT_WIDTH) * i,
-      CLOUD_HEIGHT - GAP
+      positionPlayersRenderTextX,
+      positionPlayersRenderTextY
     );
-
 
     if (players[i] === 'Вы') {
-      ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+      ctx.fillStyle = 'hsl(0, 100%, 50%)';
     } else {
-      ctx.fillStyle = 'rgba' + '(' + 255 + ', ' + rgbaNumberOne + ', ' + rgbaNumberTwo + ', ' + 1 + ')';
+      ctx.fillStyle = 'hsl(' + randomInteger(25, 99) + ', ' + '100%' + ', ' + '50%' + ')';
     }
+    
     ctx.fillRect(
-      CLOUD_X + 35 + (50 + TEXT_WIDTH) * i,
-      CLOUD_HEIGHT - GAP - FONT_GAP,
-      BAR_WIDTH,
-      (CLOUD_HEIGHT - (BAR_HEIGHT * times[i])) / maxTime
+      positionRenderBarX,
+      positionRenderBarY,
+      Bar.WIDTH,
+      barHeight
     );
+
     renderText(
       ctx,
       '#000',
       Math.floor(times[i]),
-      CLOUD_X + 35 + (50 + TEXT_WIDTH) * i,
-      CLOUD_HEIGHT - 190
+      positionTotalTimeX,
+      positionTotalTimeY
     );
   }
-}
+};
