@@ -98,7 +98,7 @@ window.renderStatistics = function (ctx, players, times) {
     } else {
       ctx.fillStyle = 'hsl(' + randomInteger(25, 99) + ', ' + '100%' + ', ' + '50%' + ')';
     }
-    
+
     ctx.fillRect(
       positionRenderBarX,
       positionRenderBarY,
